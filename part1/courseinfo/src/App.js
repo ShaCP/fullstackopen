@@ -2,6 +2,12 @@ import React from 'react';
 
 const Header = ({ course }) => <h1>{course}</h1>;
 
+const Part = ({ part, exercises }) => (
+  <p>
+    {part} {exercises}
+  </p>
+);
+
 const Content = ({
   part1,
   part2,
@@ -11,15 +17,9 @@ const Content = ({
   exercises3,
 }) => (
   <>
-    <p>
-      {part1} {exercises1}
-    </p>
-    <p>
-      {part2} {exercises2}
-    </p>
-    <p>
-      {part3} {exercises3}
-    </p>
+    <Part part={part1} exercises={exercises1} />
+    <Part part={part2} exercises={exercises2} />
+    <Part part={part3} exercises={exercises3} />
   </>
 );
 
@@ -49,8 +49,8 @@ const App = () => {
       />
       <Total
         exercises1={exercises1}
-        exercises3={exercises3}
         exercises2={exercises2}
+        exercises3={exercises3}
       />
     </div>
   );
