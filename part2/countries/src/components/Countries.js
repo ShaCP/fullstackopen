@@ -1,0 +1,115 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+// I'm caching the database results to avoid making additional requests since it's just a test app;
+import { cacheData, getCachedData, isEmptyObj } from '../helpers';
+
+const Weather = ({ weatherData }) =>
+  !isEmptyObj(weatherData) && (
+    <div>
+      <h3>Weather in {weatherData.location.name}</h3>
+      <div className="weather_data">
+        <span className="data_type">Temperature:</span>{' '}
+        {weatherData.current.temperature} °C
+      </div>
+      <img
+        className="weather_data"
+        alt={`${weatherData.current.weather_descriptions[0]} forecast`}
+        src={weatherData.current.weather_icons[0]}
+      ></img>
+      <div className="weather_data">
+        <span className="data_type">Wind:</span>{' '}
+        {weatherData.current.wind_speed}
+        mph - direction {weatherData.current.wind_dir}
+      </div>
+    </div>
+  );
+
+const baseWeatherApiUrl = `http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_API_KEY}&query=`;
+
+const Country = ({
+  country: { name, capital, population, languages, flag },
+  isOnlyResult,
+}) => {
+  const weatherApiUrl = `${baseWeatherApiUrl}${name}`;
+  const [showData, setShowData] = useState(false);
+  const [weatherData, setWeatherData] = useState(
+    getCachedData(weatherApiUrl) || {}
+  );
+
+  const expand = showData || isOnlyResult;
+
+  useEffect(() => {
+    if (expand && isEmptyObj(weatherData)) {
+      axios.get(weatherApiUrl).then(({ data }) => {
+        setWeatherData(data);
+        cacheData(data, weatherApiUrl);
+      });
+    }
+  }, [name, expand, weatherData, weatherApiUrl]);
+
+  return (
+    <div className={`country ${expand ? 'expanded' : ''}`.trim()}>
+      {expand ? (
+        <>
+          <h2>
+            {name}{' '}
+            {!isOnlyResult && (
+              <button onClick={() => setShowData(false)}>hide</button>
+            )}
+          </h2>
+          <div>
+            <span className="data_type">Capital:</span> {capital}
+          </div>
+          <div>
+            <span className="data_type">Population:</span>{' '}
+            {Number(population).toLocaleString()}
+          </div>
+          <h3>Spoken languages</h3>
+          <ul>
+            {languages.map(({ name }) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
+          <img className="flag" src={flag} alt={`${name} flag`} />
+          <Weather weatherData={weatherData} />
+        </>
+      ) : (
+        <>
+          {name} <button onClick={() => setShowData(true)}>show</button>
+        </>
+      )}
+    </div>
+  );
+};
+
+export const Countries = ({ countries, filterFor }) => {
+  const filteredCountries = filterFor
+    ? countries.filter((country) =>
+        country.name.toLowerCase().includes(filterFor.toLowerCase())
+      )
+    : [];
+
+  const showCountries = filteredCountries.length < 10;
+
+  if (!showCountries) {
+    return (
+      <div className="countries">Too many matches, specify another filter</div>
+    );
+  }
+
+  return (
+    !!filteredCountries.length && (
+      <div className="countries">
+        {filteredCountries.map((country) => (
+          <Country
+            country={country}
+            isOnlyResult={filteredCountries.length === 1}
+            key={country.name}
+          />
+        ))}
+      </div>
+    )
+  );
+};
+
+export default Countries;

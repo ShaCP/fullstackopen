@@ -1,0 +1,62 @@
+.flag {
+  width: 125px;
+}
+
+.flag,
+.country.expanded {
+  box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+}
+
+.country {
+  padding: 10px 25px;
+  border-radius: 2.5px;
+  word-break: break-word;
+  border-top: 1px solid rgb(214, 214, 214);
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: 10px;
+  align-items: center;
+}
+
+.countries {
+  width: 260px;
+  margin-top: 15px;
+}
+
+.country > h2 {
+  margin-top: 0px;
+}
+
+.country button {
+  min-width: 48px;
+  max-height: 21px;
+  display: block;
+  justify-self: end;
+}
+
+.country.expanded button {
+  margin-top: 10px;
+}
+
+.country:last-child {
+  border-bottom: 1px solid rgb(214, 214, 214);
+}
+
+.country.expanded {
+  margin-bottom: 10px;
+  padding: 20px 25px;
+  border: none;
+  display: block;
+}
+
+.country.expanded + .country {
+  border: none;
+}
+
+.data_type {
+  font-weight: bold;
+}
+
+.weather_data {
+  margin-bottom: 5px;
+}
