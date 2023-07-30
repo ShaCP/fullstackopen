@@ -1,0 +1,14 @@
+{
+    "folders": [
+        {
+            "path": "countries"
+        },
+        {
+            "path": "phonebook"
+        },
+        {
+            "path": "courseinfo"
+        }
+    ],
+    "settings": {}
+}

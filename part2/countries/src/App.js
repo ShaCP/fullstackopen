@@ -4,21 +4,17 @@ import Countries from './components/Countries';
 import Filter from './components/Filter';
 
 const App = () => {
-  const [countries, setCountries] = useState([]);
-  const [filterFor, setFilterFor] = useState('');
+    const [countries, setCountries] = useState([]);
+    const [filterFor, setFilterFor] = useState('');
 
-  useEffect(() => {
-    axios.get('https://restcountries.eu/rest/v2/all').then(({ data }) => {
-      setCountries(data);
-    });
-  }, []);
+    useEffect(() => axios.get('https://restcountries.com/v3.1/all').then(({ data }) => setCountries(data)), []);
 
-  return (
-    <div>
-      <Filter filterFor={filterFor} setFilterFor={setFilterFor} />
-      <Countries countries={countries} filterFor={filterFor} />
-    </div>
-  );
+    return (
+        <div>
+            <Filter filterFor={filterFor} setFilterFor={setFilterFor} />
+            <Countries countries={countries} filterFor={filterFor} />
+        </div>
+    );
 };
 
 export default App;
