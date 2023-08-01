@@ -1,13 +1,16 @@
 {
     "folders": [
         {
-            "path": "part0",
+            "path": "part0"
         },
         {
-            "path": "part1",
+            "path": "part1"
         },
         {
-            "path": "part2",
+            "path": "part2"
+        },
+        {
+            "path": "part3"
         }
     ],
     "settings": {}
