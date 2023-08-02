@@ -24,7 +24,6 @@ const App = () => {
   );
 
   const displayNotif = (message, isError) => {
-    debugger;
     setNotification({ message, isError: isError === true });
     setTimeout(() => setNotification({}), 5000);
   };
