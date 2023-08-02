@@ -1,0 +1,24 @@
+{
+    "folders": [
+        {
+            "path": "client",
+        },
+        {
+            "path": "server",
+        }
+    ],
+    "settings": {},
+    "launch": {
+        "version": "0.2.0",
+        "compounds": [
+            {
+                "name": "Launch Client/Server",
+                "configurations": [
+                    "Launch Chrome against localhost",
+                    "Launch via npm"
+                ]
+            }
+        ],
+        "configurations": []
+    }
+}

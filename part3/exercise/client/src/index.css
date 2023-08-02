@@ -1,0 +1,24 @@
+div {
+  margin-bottom: 5px;
+}
+
+.notification {
+  --success-color: green;
+  --error-color: red;
+  border: 3.5px solid var(--success-color);
+  background-color: lightgray;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: var(--success-color);
+  font-size: 1.25rem;
+}
+
+.notification.error {
+  border-color: var(--error-color);
+  color: var(--error-color);
+}
+
+.person {
+  margin-bottom: 10px;
+}
