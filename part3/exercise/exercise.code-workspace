@@ -14,8 +14,8 @@
             {
                 "name": "Launch Client/Server",
                 "configurations": [
-                    "Launch Chrome against localhost",
-                    "Launch via npm"
+                    "Launch Client",
+                    "Launch Server"
                 ]
             }
         ],

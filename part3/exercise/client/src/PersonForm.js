@@ -8,8 +8,8 @@ const PersonForm = ({
   setNewName,
   setNewNumber,
 }) => (
-  <div class="form-container">
-    <form class="person-form" onSubmit={addPerson}>
+  <div className="form-container">
+    <form className="person-form" onSubmit={addPerson}>
       <Input
         label="name"
         value={newName}
