@@ -1,146 +1,123 @@
-import 'dotenv/config';
+import "dotenv/config";
 import express, { static as _static, json } from "express";
 import morgan, { token } from "morgan";
 import cors from "cors";
-import mongoose from 'mongoose';
-const { set, connect, Schema, model, connection } = mongoose;
-
-function connectToDb() {
-    const dbPass = process.env.DBPASS;
-    const url =
-        `mongodb+srv://fullstack:${dbPass}@cluster0.b4lstcf.mongodb.net/phonebookApp?retryWrites=true&w=majority`;
-
-    set('strictQuery', false);
-    connect(url);
-
-    const personSchema = new Schema({
-        name: String,
-        number: String
-    });
-
-    const Person = model('Person', personSchema);
-
-    return Person;
-}
-
-const Person = connectToDb();
+import { Person } from "./models/person.mjs"
 
 const app = express();
 
-app.use(_static('build'));
+app.use(_static("build"));
 app.use(cors());
 app.use(json());
 token("body", (req) => JSON.stringify(req.body));
 
-app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 let phonebook = [
-    {
-        id: 1,
-        name: "Arto Hellas",
-        number: "040-123456"
-    },
-    {
-        id: 2,
-        name: "Ada Lovelace",
-        number: "39-44-5323523"
-    },
-    {
-        id: 3,
-        name: "Dan Abramov",
-        number: "12-43-234345"
-    },
-    {
-        id: 4,
-        name: "Mary Poppendieck",
-        number: "39-23-6423122"
-    }
+  {
+    id: 1,
+    name: "Arto Hellas",
+    number: "040-123456"
+  },
+  {
+    id: 2,
+    name: "Ada Lovelace",
+    number: "39-44-5323523"
+  },
+  {
+    id: 3,
+    name: "Dan Abramov",
+    number: "12-43-234345"
+  },
+  {
+    id: 4,
+    name: "Mary Poppendieck",
+    number: "39-23-6423122"
+  }
 ];
 
 app.get("/api/persons", async (request, response) => {
-    // return response.json(phonebook);
-    const people = await Person.find({});
-    connection.close();
-    return response.json(people);
+  const people = await Person.find({});
+  return response.json(people);
 });
 
 app.get("/api/persons/:id", (request, response) => {
-    const id = Number(request.params.id);
+  const id = Number(request.params.id);
 
-    const person = phonebook.find((person) => person.id === id);
+  const person = phonebook.find((person) => person.id === id);
 
-    if (person) {
-        return response.json(person);
-    }
+  if (person) {
+    return response.json(person);
+  }
 
-    return response.status(404).end();
+  return response.status(404).end();
 });
 
 app.delete("/api/persons/:id", (request, response) => {
-    const id = Number(request.params.id);
-    phonebook = phonebook.filter((person) => person.id !== id);
+  const id = Number(request.params.id);
+  phonebook = phonebook.filter((person) => person.id !== id);
 
-    return response.status(204).end();
+  return response.status(204).end();
 });
 
 const generateId = () => {
-    const ids = phonebook.map((p) => p.id);
-    let id = 0;
+  const ids = phonebook.map((p) => p.id);
+  let id = 0;
 
-    if (ids.length === 0) {
-        return id;
-    }
-
-    do {
-        id = Math.ceil(Math.random() * 1000);
-    } while (ids.includes(id));
-
+  if (ids.length === 0) {
     return id;
+  }
+
+  do {
+    id = Math.ceil(Math.random() * 1000);
+  } while (ids.includes(id));
+
+  return id;
 };
 
-app.post("/api/persons", (request, response) => {
-    const {
-        body: { number, name }
-    } = request;
+app.post("/api/persons", async (request, response) => {
+  const {
+    body: { number, name }
+  } = request;
 
-    if (!number || !name) {
-        return response.status(400).json({
-            error: "name or number missing"
-        });
-    }
+  if (!number || !name) {
+    return response.status(400).json({
+      error: "name or number missing"
+    });
+  }
 
-    const nameFound = phonebook.find((person) => person.name === name);
+  const nameFound = phonebook.find((person) => person.name === name);
 
-    if (nameFound) {
-        return response.status(400).json({
-            error: "name must be unique"
-        });
-    }
+  if (nameFound) {
+    return response.status(400).json({
+      error: "name must be unique"
+    });
+  }
 
-    const person = {
-        id: generateId(),
-        name,
-        number
-    };
+  const person = new Person({
+    name,
+    number
+  });
 
-    phonebook = phonebook.concat(person);
-
-    return response.status(201).json(person);
+  const result = await person.save();
+  // phonebook = phonebook.concat(person);
+  return response.status(201).json(result);
 });
 
 app.get("/info", (request, response) => {
-    const date = new Date();
-    return response.send(
-        `<p>Phonebook has info for ${phonebook.length} people</p><p>${date}</p>`
-    );
+  const date = new Date();
+  return response.send(
+    `<p>Phonebook has info for ${phonebook.length} people</p><p>${date}</p>`
+  );
 });
 
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
-
 
 //----
 

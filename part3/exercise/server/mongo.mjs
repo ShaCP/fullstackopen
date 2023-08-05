@@ -1,5 +1,5 @@
-import pkg from 'mongoose';
-const { set, connect, Schema, model, connection } = pkg;
+import mongoose from "mongoose";
+const { set, connect, Schema, model, connection } = mongoose;
 
 if (process.argv.length < 3) {
     console.log('give password as argument');
