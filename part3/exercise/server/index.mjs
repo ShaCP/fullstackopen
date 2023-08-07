@@ -93,10 +93,11 @@ app.put("/api/persons/:id", async (request, response) => {
   }
 });
 
-app.get("/info", (request, response) => {
+app.get("/info", async (request, response) => {
   const date = new Date();
+  const count = await Person.count();
   return response.send(
-    `<p>Phonebook has info for ${phonebook.length} people</p><p>${date}</p>`
+    `<p>Phonebook has info for ${count} people</p><p>${date}</p>`
   );
 });
 
