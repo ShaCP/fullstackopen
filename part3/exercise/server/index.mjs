@@ -1,81 +1,53 @@
 import "dotenv/config";
-import express, { static as _static, json } from "express";
-import morgan, { token } from "morgan";
+import express from "express";
 import cors from "cors";
-import { Person } from "./models/person.mjs"
+import { Person } from "./models/person.mjs";
+import middleware from "./middleware/index.mjs";
 
 const app = express();
 
-app.use(_static("build"));
 app.use(cors());
-app.use(json());
-token("body", (req) => JSON.stringify(req.body));
+app.use(express.static("build"));
+app.use(express.json());
+app.use(middleware.requestLogger);
+app.use(middleware.errorHandler);
+
+middleware.morgan.token("body", (req) => JSON.stringify(req.body));
 
 app.use(
-  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+  middleware.morgan(
+    "RESPONSE: Method: :method -- Path: :url -- Status: :status -- Length: :res[content-length] -- Response Time: :response-time ms -- Body: :body"
+  )
 );
-
-let phonebook = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456"
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523"
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345"
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122"
-  }
-];
 
 app.get("/api/persons", async (request, response) => {
   const people = await Person.find({});
   return response.json(people);
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
+app.get("/api/persons/:id", async (request, response, next) => {
+  let person = null;
+  try {
+    person = await Person.findById(request.params.id);
 
-  const person = phonebook.find((person) => person.id === id);
+    if (person) {
+      return response.json(person);
+    }
 
-  if (person) {
-    return response.json(person);
+    return response.status(404).end();
+  } catch (error) {
+    return next(error);
   }
-
-  return response.status(404).end();
 });
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  phonebook = phonebook.filter((person) => person.id !== id);
-
-  return response.status(204).end();
-});
-
-const generateId = () => {
-  const ids = phonebook.map((p) => p.id);
-  let id = 0;
-
-  if (ids.length === 0) {
-    return id;
+app.delete("/api/persons/:id", async (request, response, next) => {
+  try {
+    await Person.findByIdAndRemove(request.params.id);
+    return response.status(204).end();
+  } catch (error) {
+    return next(error);
   }
-
-  do {
-    id = Math.ceil(Math.random() * 1000);
-  } while (ids.includes(id));
-
-  return id;
-};
+});
 
 app.post("/api/persons", async (request, response) => {
   const {
@@ -88,9 +60,9 @@ app.post("/api/persons", async (request, response) => {
     });
   }
 
-  const nameFound = phonebook.find((person) => person.name === name);
+  const personFound = await Person.findOne({ name });
 
-  if (nameFound) {
+  if (personFound) {
     return response.status(400).json({
       error: "name must be unique"
     });
@@ -102,8 +74,23 @@ app.post("/api/persons", async (request, response) => {
   });
 
   const result = await person.save();
-  // phonebook = phonebook.concat(person);
   return response.status(201).json(result);
+});
+
+app.put("/api/persons/:id", async (request, response) => {
+  const { number } = request.body;
+
+  try {
+    const personUpdated = await Person.findByIdAndUpdate(
+      request.params.id,
+      { number },
+      { new: true }
+    );
+
+    return response.json(personUpdated);
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.get("/info", (request, response) => {
@@ -113,51 +100,16 @@ app.get("/info", (request, response) => {
   );
 });
 
+// We load this after all the other routes, because it runs only if none of the previous routes handled the request.
+app.use(middleware.unknownEndpoint);
+
+// Now we load the error handler middleware, which is the last middleware loaded.
+app.use(middleware.errorHandler);
+
+// If we were to load it earlier
+
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-//----
-
-// if (process.argv.length < 3) {
-//     console.log('give password as argument');
-//     process.exit(1);
-// }
-
-// const password = process.argv[2];
-// const name = process.argv[3];
-// const number = process.argv[4];
-
-// const url =
-//     `mongodb+srv://fullstack:${password}@cluster0.b4lstcf.mongodb.net/phonebookApp?retryWrites=true&w=majority`;
-
-// set('strictQuery', false);
-// connect(url);
-
-// const personSchema = new Schema({
-//     name: String,
-//     number: String
-// });
-
-// const Person = model('Person', personSchema);
-
-// if (name && number) {
-//     const person = new Person({
-//         name,
-//         number,
-//     });
-
-//     const result = await person.save();
-//     const { name: _name, number: _number } = result;
-//     console.log(`added ${_name} number ${_number} to phonebook`);
-
-// } else {
-//     const result = await Person.find({});
-//     result.forEach(person => {
-//         console.log(person);
-//     });
-// }
-
-// connection.close();

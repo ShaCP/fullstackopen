@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import personService from './services/persons';
-import Input from './Input';
-import PersonForm from './PersonForm';
-import Persons from './Persons';
-import Notification from './Notification';
+import React, { useState, useEffect } from "react";
+import personService from "./services/persons";
+import Input from "./Input";
+import PersonForm from "./PersonForm";
+import Persons from "./Persons";
+import Notification from "./Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [filterFor, setFilterFor] = useState('');
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [filterFor, setFilterFor] = useState("");
   const [notification, setNotification] = useState({
-    message: '',
-    isError: false,
+    message: "",
+    isError: false
   });
 
   useEffect(
@@ -23,15 +23,15 @@ const App = () => {
     []
   );
 
-  const displayNotif = (message, isError) => {
-    setNotification({ message, isError: isError === true });
+  const displayNotif = (message, isError = false) => {
+    setNotification({ message, isError });
     setTimeout(() => setNotification({}), 5000);
   };
 
   const addPerson = (e) => {
     e.preventDefault();
 
-    if (!newName) return;
+    if (!newName || !newNumber) return;
 
     //if person is already in phonebook
     const matchingPerson = persons.find(({ name }) => name === newName);
@@ -49,26 +49,24 @@ const App = () => {
       const person = { name: newName, number: newNumber };
       personService.create(person).then((returnedPerson) => {
         setPersons([...persons, returnedPerson]);
-        setNewName('');
-        setNewNumber('');
+        setNewName("");
+        setNewNumber("");
       });
       displayNotif(`Added ${newName}`);
     }
   };
 
-  const updatePerson = (matchingPerson) => {
-    personService
-      .update(matchingPerson.id, { ...matchingPerson, number: newNumber })
-      .then((returnedPerson) => {
-        setPersons(
-          persons.map((person) =>
-            person.id !== returnedPerson.id ? person : returnedPerson
-          )
-        );
-        setNewName('');
-        setNewNumber('');
-        displayNotif(`Updated ${newName}`);
-      });
+  const updatePerson = ({ id }) => {
+    personService.update(id, newNumber).then((returnedPerson) => {
+      setPersons(
+        persons.map((person) =>
+          person.id !== returnedPerson.id ? person : returnedPerson
+        )
+      );
+      setNewName("");
+      setNewNumber("");
+      displayNotif(`Updated ${newName}`);
+    });
   };
 
   const deletePerson = (name, id) => {

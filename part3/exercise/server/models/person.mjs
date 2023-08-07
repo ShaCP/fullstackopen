@@ -1,10 +1,8 @@
-
 import mongoose from "mongoose";
 const { set, connect, Schema, model, connection } = mongoose;
 
 async function generateModel() {
-  const dbPass = process.env.DBPASS;
-  const url = `mongodb+srv://fullstack:${dbPass}@cluster0.b4lstcf.mongodb.net/phonebookApp?retryWrites=true&w=majority`;
+  const url = process.env.MONGODB_URI;
 
   set("strictQuery", false);
 

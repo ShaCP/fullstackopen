@@ -1,17 +1,18 @@
 {
     "folders": [
         {
-            "path": "part0"
+            "path": "."
         },
         {
-            "path": "part1"
+            "path": "part3/exercise/server"
         },
         {
-            "path": "part2"
-        },
-        {
-            "path": "part3"
+            "path": "part3/exercise/client"
         }
     ],
-    "settings": {}
+    "settings": {},
+    "launch": {
+        "version": "0.2.0",
+        "configurations": []
+    }
 }
