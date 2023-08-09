@@ -3,55 +3,54 @@ const app = express();
 app.use(express.json());
 let ok;
 let notes = [
-    {
-        id: 1,
-        content: "HTML is easy",
-        important: true
-    },
-    {
-        id: 2,
-        content: "Browser can execute only JavaScript",
-        important: false
-    },
-    {
-        id: 3,
-        content: "GET and POST are the most important methods of HTTP protocol",
-        important: true
-    }
+  {
+    id: 1,
+    content: "HTML is easy",
+    important: true
+  },
+  {
+    id: 2,
+    content: "Browser can execute only JavaScript",
+    important: false
+  },
+  {
+    id: 3,
+    content: "GET and POST are the most important methods of HTTP protocol",
+    important: true
+  }
 ];
 app.get("/", (request, response) => {
-    response.send("<h1>Hello World!</h1>");
+  response.send("<h1>Hello World!</h1>");
 });
 app.get("/api/notes/:id", (request, response) => {
-    const id = Number(request.params.id);
-    const note = notes.find((note) => note.id === id);
+  const id = Number(request.params.id);
+  const note = notes.find((note) => note.id === id);
+  response.json(note);
+  if (note) {
     response.json(note);
-    if (note) {
-        response.json(note);
-    }
-    else {
-        // use end to end the response without sending any data
-        response.status(404).end();
-    }
+  } else {
+    // use end to end the response without sending any data
+    response.status(404).end();
+  }
 });
 app.get("/api/notes", (request, response) => {
-    response.json(notes);
+  response.json(notes);
 });
 app.delete("/api/notes/:id", (request, response) => {
-    const id = Number(request.params.id);
-    notes = notes.filter((note) => note.id !== id);
-    response.status(204).end();
+  const id = Number(request.params.id);
+  notes = notes.filter((note) => note.id !== id);
+  response.status(204).end();
 });
 app.post("/api/notes", (request, response) => {
-    const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-    // const note = request.body;
-    // node.id = maxId + 1;
-    const note = Object.assign({ id: maxId + 1 }, request.body); // I did it this way to make sure id showed up first in the response, not necessary at all though
-    notes = notes.concat(note);
-    response.json(note);
+  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
+  // const note = request.body;
+  // node.id = maxId + 1;
+  const note = Object.assign({ id: maxId + 1 }, request.body); // I did it this way to make sure id showed up first in the response, not necessary at all though
+  notes = notes.concat(note);
+  response.json(note);
 });
 const PORT = 3001;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 //# sourceMappingURL=app.js.map

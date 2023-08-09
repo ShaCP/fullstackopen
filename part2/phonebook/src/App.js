@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import personService from './services/persons';
-import Input from './Input';
-import PersonForm from './PersonForm';
-import Persons from './Persons';
-import Notification from './Notification';
+import React, { useState, useEffect } from "react";
+import personService from "./services/persons";
+import Input from "./Input";
+import PersonForm from "./PersonForm";
+import Persons from "./Persons";
+import Notification from "./Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [filterFor, setFilterFor] = useState('');
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [filter, setFilter] = useState("");
   const [notification, setNotification] = useState({
-    message: '',
-    isError: false,
+    message: "",
+    isError: false
   });
 
   useEffect(
@@ -49,8 +49,8 @@ const App = () => {
       const person = { name: newName, number: newNumber };
       personService.create(person).then((returnedPerson) => {
         setPersons([...persons, returnedPerson]);
-        setNewName('');
-        setNewNumber('');
+        setNewName("");
+        setNewNumber("");
       });
       displayNotif(`Added ${newName}`);
     }
@@ -65,24 +65,24 @@ const App = () => {
             person.id !== returnedPerson.id ? person : returnedPerson
           )
         );
-        setNewName('');
-        setNewNumber('');
+        setNewName("");
+        setNewNumber("");
         displayNotif(`Updated ${newName}`);
       });
   };
 
-  const deletePerson = (name, id) => {
-    if (window.confirm(`Delete ${name}?`)) {
+  const removePerson = (name, id) => {
+    if (window.confirm(`Remove ${name}?`)) {
       personService
         .remove(id)
         .then(() => {
           setPersons(persons.filter((person) => person.id !== id));
-          displayNotif(`Deleted ${name}`);
+          displayNotif(`Removed ${name}`);
         })
         .catch((error) => {
           setPersons(persons.filter((person) => person.id !== id));
           displayNotif(
-            `${name} had already been deleted from the server`,
+            `${name} had already been removed from the server`,
             true
           );
         });
@@ -95,8 +95,8 @@ const App = () => {
       <Notification notification={notification} />
       <Input
         label="filter for"
-        value={filterFor}
-        onChange={(e) => setFilterFor(e.target.value)}
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
       />
       <h3>Add a new</h3>
       <PersonForm
@@ -107,11 +107,7 @@ const App = () => {
         setNewNumber={setNewNumber}
       />
       <h3>Numbers</h3>
-      <Persons
-        persons={persons}
-        filterFor={filterFor}
-        deletePerson={deletePerson}
-      />
+      <Persons persons={persons} filter={filter} removePerson={removePerson} />
     </div>
   );
 };

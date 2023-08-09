@@ -1,21 +1,21 @@
-import React from 'react';
-import Input from './Input';
+import React from "react";
+import LabeledInput from "./LabeledInput";
 
 const PersonForm = ({
   addPerson,
   newName,
   newNumber,
   setNewName,
-  setNewNumber,
+  setNewNumber
 }) => (
   <div className="form-container">
     <form className="person-form" onSubmit={addPerson}>
-      <Input
+      <LabeledInput
         label="name"
         value={newName}
         onChange={(e) => setNewName(e.target.value)}
       />
-      <Input
+      <LabeledInput
         label="phone number"
         value={newNumber}
         onChange={(e) => setNewNumber(e.target.value)}

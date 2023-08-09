@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-export const Filter = ({ filterFor, setFilterFor }) => (
+export const Filter = ({ filter, setFilter }) => (
   <div>
-    Find countries:{' '}
-    <input value={filterFor} onChange={(e) => setFilterFor(e.target.value)} />
+    Find countries:{" "}
+    <input value={filter} onChange={(e) => setFilter(e.target.value)} />
   </div>
 );
 

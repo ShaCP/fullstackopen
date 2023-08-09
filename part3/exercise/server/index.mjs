@@ -77,7 +77,7 @@ app.post("/api/persons", async (request, response) => {
   return response.status(201).json(result);
 });
 
-app.put("/api/persons/:id", async (request, response) => {
+app.put("/api/persons/:id", async (request, response, next) => {
   const { number } = request.body;
 
   try {
@@ -89,7 +89,7 @@ app.put("/api/persons/:id", async (request, response) => {
 
     return response.json(personUpdated);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
