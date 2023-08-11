@@ -1,21 +1,21 @@
-import React from 'react';
+import React from "react";
 
-const Person = ({ person: { name, number }, deletePerson }) => (
+const Person = ({ person: { name, number }, removePerson }) => (
   <li key={name} className="person">
-    {name} {number} <button onClick={deletePerson}>delete</button>
+    {name} {number} <button onClick={removePerson}>remove</button>
   </li>
 );
 
-const Persons = ({ persons, filterFor, deletePerson }) => {
+const Persons = ({ persons, filter, removePerson }) => {
   const filteredPersons = persons.filter(({ name }) =>
-    name.toLowerCase().includes(filterFor.toLowerCase())
+    name.toLowerCase().includes(filter.toLowerCase())
   );
 
   const filteredPersonsList = filteredPersons.map((person) => (
     <Person
       key={person.id}
       person={person}
-      deletePerson={() => deletePerson(person.name, person.id)}
+      removePerson={() => removePerson(person.name, person.id)}
     />
   ));
 

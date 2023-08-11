@@ -1,0 +1,24 @@
+{
+    "folders": [
+        {
+            "path": "client",
+        },
+        {
+            "path": "server",
+        }
+    ],
+    "settings": {},
+    "launch": {
+        "version": "0.2.0",
+        "compounds": [
+            {
+                "name": "Launch Client/Server",
+                "configurations": [
+                    "Launch Client",
+                    "Launch Server"
+                ]
+            }
+        ],
+        "configurations": []
+    }
+}

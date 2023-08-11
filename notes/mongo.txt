@@ -1,0 +1,1 @@
+I installed mongo compass (gui) and mongosh (command line) to manage the DB, or you can just use atlas

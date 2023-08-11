@@ -1,0 +1,3 @@
+   this is because we're now using a relative path as the baseUrl so it
+   will try to hit port 3000 since that's where the client is running,
+   but we want it to hit port 3001 where the server is running
