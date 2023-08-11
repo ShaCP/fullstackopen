@@ -49,42 +49,37 @@ app.delete("/api/persons/:id", async (request, response, next) => {
   }
 });
 
-app.post("/api/persons", async (request, response) => {
+app.post("/api/persons", async (request, response, next) => {
   const {
     body: { number, name }
   } = request;
-
-  if (!number || !name) {
-    return response.status(400).json({
-      error: "name or number missing"
-    });
-  }
-
-  const personFound = await Person.findOne({ name });
-
-  if (personFound) {
-    return response.status(400).json({
-      error: "name must be unique"
-    });
-  }
 
   const person = new Person({
     name,
     number
   });
 
-  const result = await person.save();
-  return response.status(201).json(result);
+  try {
+    const result = await person.save();
+    return response.status(201).json(result);
+  } catch (error) {
+    return next(error);
+  }
 });
 
 app.put("/api/persons/:id", async (request, response, next) => {
   const { number } = request.body;
 
+  if (number === undefined) {
+    return response.status(400).json({ error: "Number is missing" });
+  }
+
   try {
     const personUpdated = await Person.findByIdAndUpdate(
       request.params.id,
       { number },
-      { new: true }
+      // context: 'query' is no longer needed, it's the default behavior
+      { new: true, runValidators: true }
     );
 
     return response.json(personUpdated);

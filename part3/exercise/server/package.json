@@ -6,11 +6,13 @@
   "scripts": {
     "build:ui": "rm -rf build && cd ../client/ && npm run build && cp -r build ../server",
     "deploy": "fly deploy",
+    "secrets": "fly secrets",
     "deploy:full": "npm run build:ui && npm run deploy",
     "start": "node index.mjs",
     "dev": "nodemon index.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "logs:prod": "fly logs"
+    "logs:prod": "fly logs",
+    "lint": "eslint ."
   },
   "proxy": "http://localhost:3001",
   "author": "Shafick Cure",
@@ -23,6 +25,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^8.46.0",
     "nodemon": "^3.0.1"
   }
 }

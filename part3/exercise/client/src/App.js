@@ -53,11 +53,17 @@ const App = () => {
       return;
     } else {
       const person = { name: newName, number: newNumber };
-      personService.create(person).then((returnedPerson) => {
-        setPersons([...persons, returnedPerson]);
-        cleanForm();
-        displayNotif(`Added ${newName}`);
-      });
+      personService
+        .create(person)
+        .then((returnedPerson) => {
+          setPersons([...persons, returnedPerson]);
+          cleanForm();
+          displayNotif(`Added ${newName}`);
+        })
+        .catch((error) => {
+          console.error(error.response.data.error);
+          displayNotif(error.response.data.error, true);
+        });
     }
   };
 
