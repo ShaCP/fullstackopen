@@ -1,8 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { Person } from "./models/person.mjs";
-import middleware from "./middleware/index.mjs";
+import { Person } from "./models/person.js";
+import middleware from "./middleware/index.js";
 
 const app = express();
 
@@ -10,7 +10,6 @@ app.use(cors());
 app.use(express.static("build"));
 app.use(express.json());
 app.use(middleware.requestLogger);
-app.use(middleware.errorHandler);
 
 middleware.morgan.token("body", (req) => JSON.stringify(req.body));
 

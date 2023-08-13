@@ -4,10 +4,7 @@
             "path": "."
         },
         {
-            "path": "part3/exercise/server"
-        },
-        {
-            "path": "part3/exercise/client"
+            "path": "part4/blog"
         }
     ],
     "settings": {},

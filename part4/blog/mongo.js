@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import "dotenv/config";
-import { Person } from "./models/person.js";
+import { Post } from "./models/post.js";
 const { set, connect, connection } = mongoose;
 
 // if (process.argv.length < 3) {
@@ -18,19 +18,19 @@ set("strictQuery", false);
 connect(url);
 
 if (name && number) {
-  const person = new Person({
+  const post = new Post({
     name,
     number
   });
 
-  const result = await person.save();
+  const result = await post.save();
   const { name: _name, number: _number } = result;
   console.log(`added ${_name} number ${_number} to phonebook`);
 } else {
-  const result = await Person.find({});
-  console.log("phonebook:");
-  result.forEach((person) => {
-    console.log(person);
+  const result = await Post.find({});
+  console.log("blog:");
+  result.forEach((post) => {
+    console.log(post);
   });
 }
 
