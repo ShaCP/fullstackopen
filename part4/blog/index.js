@@ -1,18 +1,8 @@
-import { config, logger, middleware } from "./utils/index.js";
-import express from "express";
-import postsRouter from "./controllers/posts.js";
-import cors from "cors";
+import { config, logger } from "./utils/index.js";
+import supertest from "supertest";
+import app from "./app.js";
 
-const app = express();
-app.use(cors());
-app.use(express.static("build"));
-app.use(express.json());
-app.use(middleware.requestLogger);
-
-app.use("/api/posts", postsRouter);
-
-app.use(middleware.unknownEndpoint);
-app.use(middleware.errorHandler);
+const api = supertest(app);
 
 app.listen(config.PORT, () => {
   logger.info(`Server running on port ${config.PORT}`);

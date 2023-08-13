@@ -1,25 +1,7 @@
 import mongoose from "mongoose";
-import config from "../utils/config.js";
-import logger from "../utils/logger.js";
-const { set, connect, Schema, model } = mongoose;
+const { Schema, model } = mongoose;
 
 async function generateModel() {
-  const url = config.MONGODB_URI;
-
-  // https://mongoosejs.com/docs/faq.html#enable_debugging
-  set("debug", true);
-  // https://mongoosejs.com/docs/guide.html#strict
-  set("strictQuery", false);
-
-  logger.info("connecting to", url);
-
-  try {
-    await connect(url);
-    logger.info("connected to MongoDB");
-  } catch (error) {
-    logger.error("error connecting to MongoDB:", error.message);
-  }
-
   const postSchema = new Schema({
     title: String,
     author: String,

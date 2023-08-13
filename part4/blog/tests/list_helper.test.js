@@ -1,6 +1,5 @@
 import { expect, describe, test, beforeEach } from "@jest/globals";
 import listHelper from "../utils/list_helper.js";
-import { get } from "mongoose";
 
 // you can run a single test like this:
 // npm test -- -t 'when list has only one blog, equals the likes of that'
