@@ -1,6 +1,7 @@
 import { middleware, config, logger } from "./utils/index.js";
 import testDb from "./tests/db.js";
 import express from "express";
+import "express-async-errors";
 import postsRouter from "./controllers/posts.js";
 import cors from "cors";
 import mongoose from "mongoose";

@@ -19,7 +19,7 @@ async function generateModel() {
     name: {
       type: String,
       minLength: 3,
-      require: true
+      required: true
     },
     number: {
       type: String,

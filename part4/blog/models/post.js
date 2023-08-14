@@ -3,8 +3,14 @@ const { Schema, model } = mongoose;
 
 async function generateModel() {
   const postSchema = new Schema({
-    title: String,
-    author: String,
+    title: {
+      type: String,
+      required: true
+    },
+    author: {
+      type: String,
+      required: true
+    },
     url: String,
     likes: Number
   });
